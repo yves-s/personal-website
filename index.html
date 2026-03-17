@@ -1233,5 +1233,84 @@
   <a href="https://www.linkedin.com/in/yves-schleich/" target="_blank">LinkedIn</a>
 </footer>
 
+<script>
+const SUPABASE_URL = 'https://wsmnutkobalfrceavpxs.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzbW51dGtvYmFsZnJjZWF2cHhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwODIxMTcsImV4cCI6MjA4ODY1ODExN30.fqk18_Q81cZMrFyj1ECaJnvcR7G4oerE-RSKFnrAPO4';
+
+async function submitEmail(email, form) {
+  const btn = form.querySelector('button');
+  const input = form.querySelector('input');
+  const originalText = btn.textContent;
+  
+  if (!email || !email.includes('@')) {
+    input.style.borderColor = '#FF6F61';
+    setTimeout(() => input.style.borderColor = '', 2000);
+    return;
+  }
+
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ email: email.toLowerCase().trim() })
+    });
+
+    if (res.ok) {
+      btn.textContent = '✓ Eingetragen!';
+      btn.style.background = '#2E8B57';
+      input.value = '';
+      input.disabled = true;
+    } else if (res.status === 409) {
+      btn.textContent = 'Bereits eingetragen';
+      setTimeout(() => { btn.textContent = originalText; btn.disabled = false; }, 2500);
+    } else {
+      throw new Error('Request failed');
+    }
+  } catch (e) {
+    btn.textContent = 'Fehler – nochmal?';
+    btn.style.background = '#FF6F61';
+    setTimeout(() => { 
+      btn.textContent = originalText; 
+      btn.style.background = ''; 
+      btn.disabled = false; 
+    }, 2500);
+  }
+}
+
+// Hero form
+document.querySelector('.hero-form').addEventListener('submit', e => e.preventDefault());
+document.querySelector('.hero-btn').addEventListener('click', function() {
+  const input = document.querySelector('.hero-input');
+  submitEmail(input.value, document.querySelector('.hero-form'));
+});
+document.querySelector('.hero-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    submitEmail(this.value, document.querySelector('.hero-form'));
+  }
+});
+
+// Waitlist form
+document.querySelector('.waitlist-form').addEventListener('submit', e => e.preventDefault());
+document.querySelector('.waitlist-btn').addEventListener('click', function() {
+  const input = document.querySelector('.waitlist-input');
+  submitEmail(input.value, document.querySelector('.waitlist-form'));
+});
+document.querySelector('.waitlist-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    submitEmail(this.value, document.querySelector('.waitlist-form'));
+  }
+});
+</script>
+
 </body>
 </html>
