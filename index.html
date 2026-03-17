@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yves Schleich – Software ohne Dev-Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --emerald: #2E8B57;
+    --emerald-light: #3DA66B;
+    --emerald-glow: rgba(46, 139, 87, 0.12);
+    --emerald-glow-strong: rgba(46, 139, 87, 0.25);
+    --coral: #FF6F61;
+    --coral-glow: rgba(255, 111, 97, 0.12);
+    --lavender: #B8A9E8;
+    --bg-dark: #0B0F14;
+    --bg-card: #141920;
+    --bg-card-hover: #1A2028;
+    --bg-terminal: #0D1117;
+    --text-primary: #E8ECF0;
+    --text-secondary: #8B949E;
+    --text-muted: #5A6370;
+    --border: rgba(255,255,255,0.06);
+    --border-light: rgba(255,255,255,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(11, 15, 20, 0.88);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .nav-name {
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-sep {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .nav-justship {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--emerald);
+    background: var(--emerald-glow);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .nav-cta {
+    padding: 0.5rem 1.25rem;
+    background: var(--emerald);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--emerald-light); transform: translateY(-1px); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .nav-icon:hover {
+    background: rgba(255,255,255,0.06);
+  }
+
+  .nav-icon:hover svg {
+    fill: var(--text-primary);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    left: -30%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--emerald-glow) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--emerald);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero-label::before {
+    content: '';
+    width: 24px;
+    height: 2px;
+    background: var(--emerald);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--coral);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+    line-height: 1.75;
+  }
+
+  .hero-sub a {
+    color: var(--emerald);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--emerald-glow-strong);
+    transition: border-color 0.2s;
+  }
+
+  .hero-sub a:hover { border-color: var(--emerald); }
+
+  .hero-proof {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .hero-form {
+    display: flex;
+    gap: 0.6rem;
+    max-width: 440px;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-input {
+    flex: 1;
+    padding: 0.85rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .hero-input:focus { border-color: var(--emerald); }
+  .hero-input::placeholder { color: var(--text-muted); }
+
+  .hero-btn {
+    padding: 0.85rem 1.5rem;
+    background: var(--emerald);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .hero-btn:hover { background: var(--emerald-light); transform: translateY(-1px); }
+
+  .hero-form-note {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .proof-item { display: flex; flex-direction: column; }
+
+  .proof-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--emerald);
+  }
+
+  .proof-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 5.5rem 2rem;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--emerald);
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .section-intro {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 2rem;
+  }
+
+  /* ── BEFORE / AFTER ── */
+  .contrast {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .contrast-block {
+    border-radius: 10px;
+    padding: 1.75rem;
+  }
+
+  .contrast-before {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 111, 97, 0.15);
+  }
+
+  .contrast-after {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(46, 139, 87, 0.08) 100%);
+    border: 1px solid rgba(46, 139, 87, 0.25);
+  }
+
+  .contrast-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .contrast-label-before { color: var(--coral); }
+  .contrast-label-after { color: var(--emerald); }
+
+  .contrast-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .contrast-list li {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .contrast-before .contrast-list li::before {
+    content: '×';
+    position: absolute;
+    left: 0;
+    color: var(--coral);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .contrast-consequence {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--coral);
+    font-weight: 600;
+  }
+
+  .contrast-after .contrast-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--emerald);
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  /* ── WHAT I DO ── */
+  .wid-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .wid-step {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .wid-step:hover { border-color: rgba(46, 139, 87, 0.2); }
+
+  .wid-step-highlight {
+    border-color: rgba(46, 139, 87, 0.25);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(46, 139, 87, 0.06) 100%);
+  }
+
+  .wid-step-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--emerald);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--emerald-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .wid-step-highlight .wid-step-number {
+    background: var(--emerald);
+    color: #fff;
+  }
+
+  .wid-step-content h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .wid-step-content p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+
+  /* ── TECH DIVIDER ── */
+  .tech-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 820px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+
+  .tech-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+  }
+
+  .tech-divider-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* ── JUST SHIP SECTION ── */
+  .justship-hero {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .justship-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--emerald), var(--coral), var(--lavender));
+  }
+
+  .justship-hero-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .justship-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+  }
+
+  .justship-oss {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+    padding: 0.15rem 0.5rem;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .justship-hero p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    max-width: 560px;
+  }
+
+  .justship-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .js-stat {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .js-stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--emerald);
+  }
+
+  .js-stat-label {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+  }
+
+  .justship-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--emerald);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .justship-link:hover { border-bottom-color: var(--emerald); }
+
+  /* ── AGENTS GRID ── */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.65rem;
+    margin-top: 2rem;
+  }
+
+  .agent-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.15rem;
+    transition: border-color 0.2s;
+  }
+
+  .agent-card:hover { border-color: rgba(46, 139, 87, 0.2); }
+
+  .agent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+  }
+
+  .agent-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .agent-model {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.04);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  .agent-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  /* ── TERMINAL BLOCK ── */
+  .terminal {
+    background: var(--bg-terminal);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+
+  .terminal-bar {
+    padding: 0.65rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terminal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    opacity: 0.4;
+  }
+
+  .terminal-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-left: 0.5rem;
+  }
+
+  .terminal-body {
+    padding: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 2;
+    color: var(--text-secondary);
+  }
+
+  .terminal-body .cmd { color: var(--emerald); }
+  .terminal-body .comment { color: var(--text-muted); }
+  .terminal-body .flag { color: var(--coral); }
+
+  /* ── PACKAGES ── */
+  .packages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .package {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s;
+  }
+
+  .package:hover { border-color: rgba(46, 139, 87, 0.2); }
+
+  .package-highlight {
+    border-color: rgba(46, 139, 87, 0.3);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(46, 139, 87, 0.08) 100%);
+  }
+
+  .package-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--emerald);
+    margin-bottom: 0.75rem;
+  }
+
+  .package h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .package p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .package-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--emerald);
+    text-decoration: none;
+    margin-top: 1rem;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .package-link:hover { border-bottom-color: var(--emerald); }
+
+  /* ── CASE STUDIES ── */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .case-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .case-card:hover { border-color: rgba(46, 139, 87, 0.2); }
+
+  .case-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .case-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .case-card p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+  }
+
+  .case-card-stat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--emerald);
+  }
+
+  .case-card-stat span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 0.3rem;
+  }
+
+  /* ── ABOUT ── */
+  .about-content {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+  }
+
+  .about-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--emerald), var(--coral));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+
+  .about-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  /* ── WAITLIST ── */
+  .waitlist {
+    text-align: center;
+    padding: 6rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .waitlist::before {
+    content: '';
+    position: absolute;
+    bottom: 10%;
+    right: -40%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--emerald-glow) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .waitlist h2 { margin-bottom: 0.75rem; }
+
+  .waitlist > p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+
+  .waitlist-form {
+    display: flex;
+    gap: 0.6rem;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .waitlist-input {
+    flex: 1;
+    padding: 0.85rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .waitlist-input:focus { border-color: var(--emerald); }
+  .waitlist-input::placeholder { color: var(--text-muted); }
+
+  .waitlist-btn {
+    padding: 0.85rem 1.5rem;
+    background: var(--emerald);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .waitlist-btn:hover { background: var(--emerald-light); transform: translateY(-1px); }
+
+  .waitlist-note {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  footer a { color: var(--emerald); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label, .hero h1, .hero-sub, .hero-form, .hero-form-note, .hero-proof {
+    animation: fadeUp 0.6s ease-out both;
+  }
+  .hero h1 { animation-delay: 0.08s; }
+  .hero-sub { animation-delay: 0.16s; }
+  .hero-form { animation-delay: 0.24s; }
+  .hero-form-note { animation-delay: 0.24s; }
+  .hero-proof { animation-delay: 0.35s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 0.85rem 1.25rem; }
+    .hero { padding: 7rem 1.25rem 3rem; }
+    section { padding: 4rem 1.25rem; }
+    .hero-proof { gap: 1.5rem; }
+    .hero-form { flex-direction: column; }
+    .waitlist-form { flex-direction: column; }
+    .about-content { flex-direction: column; align-items: center; text-align: center; }
+    .about-tags { justify-content: center; }
+    .justship-hero { padding: 1.75rem; }
+    .justship-stats { gap: 1.25rem; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .contrast { grid-template-columns: 1fr; }
+    .packages { grid-template-columns: 1fr; }
+    .cases-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <div class="nav-name">Yves Schleich</div>
+    <span class="nav-sep">·</span>
+    <span class="nav-justship">just-ship</span>
+  </div>
+  <div class="nav-right">
+    <a href="https://www.linkedin.com/in/yves-schleich/" target="_blank" class="nav-icon" title="LinkedIn" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#8B949E" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://wa.me/4915164974587" target="_blank" class="nav-icon" title="WhatsApp" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#8B949E" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+    <a href="#waitlist" class="nav-cta">Auf die Warteliste</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════ -->
+<!-- BUSINESS HALF                       -->
+<!-- ═══════════════════════════════════ -->
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-label">Software ohne Dev-Team</div>
+  <h1>Deine Software.<br>Gebaut von <em>deinem AI-Agent-Team</em>, das in Tagen liefert statt Monaten.</h1>
+  <p class="hero-sub">Kein Dev-Team? Kein Problem. Ich setze dir ein autonomes Entwicklerteam auf, das rund um die Uhr für dich arbeitet. Du sagst was du brauchst – ich liefere fertige Software.</p>
+  <div class="hero-form">
+    <input type="email" class="hero-input" placeholder="deine@email.de">
+    <button class="hero-btn">Auf die Warteliste</button>
+  </div>
+  <p class="hero-form-note">Kein Spam. Ich melde mich persönlich bei dir.</p>
+  <div class="hero-proof">
+    <div class="proof-item">
+      <div class="proof-number">Tage</div>
+      <div class="proof-label">statt Monate pro Feature</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-number">24/7</div>
+      <div class="proof-label">Dein Team arbeitet rund um die Uhr</div>
+    </div>
+    <div class="proof-item">
+      <div class="proof-number">300+</div>
+      <div class="proof-label">Features ausgeliefert</div>
+    </div>
+  </div>
+</div>
+
+<!-- BEFORE / AFTER -->
+<section>
+  <div class="section-label">Vorher / Nachher</div>
+  <h2>Software-Entwicklung ist kaputt. So sieht die Alternative aus.</h2>
+  <div class="contrast">
+    <div class="contrast-block contrast-before">
+      <div class="contrast-label contrast-label-before">So läuft es heute</div>
+      <ul class="contrast-list">
+        <li>Abstimmung mit Tech, Design und Stakeholdern</li>
+        <li>Meetings für jedes Feature, jeden Bug</li>
+        <li>Tage verstreichen – ohne sichtbares Ergebnis</li>
+        <li>Feedback-Runden, Korrekturschleifen, nochmal von vorne</li>
+        <li>Wochen bis zum nächsten Release</li>
+      </ul>
+      <div class="contrast-consequence">Ergebnis: Dauert lange, kostet viel – und am Ende passt die Hälfte nicht.</div>
+    </div>
+    <div class="contrast-block contrast-after">
+      <div class="contrast-label contrast-label-after">Mit deinem AI-Agent-Team</div>
+      <ul class="contrast-list">
+        <li>Du beschreibst, was du brauchst – fertig</li>
+        <li>Dein Team arbeitet sofort los – autonom, 24/7</li>
+        <li>Du bekommst einen Link zum Testen – in Minuten</li>
+        <li>Qualität ist eingebaut – Review, Tests, Sicherheit automatisch</li>
+        <li>Fertige Features in Tagen, nicht Monaten</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT I DO -->
+<section>
+  <div class="section-label">Was ich tue</div>
+  <h2>Dein eigenes Dev-Team – ohne einen einzigen Entwickler einzustellen.</h2>
+
+  <div class="wid-steps">
+    <div class="wid-step">
+      <div class="wid-step-number">01</div>
+      <div class="wid-step-content">
+        <h3>Strategie & Architektur</h3>
+        <p>Ich verstehe dein Business und plane, was gebaut und automatisiert werden kann – bevor eine Zeile Code geschrieben wird.</p>
+      </div>
+    </div>
+    <div class="wid-step wid-step-highlight">
+      <div class="wid-step-number">02</div>
+      <div class="wid-step-content">
+        <h3>Dein autonomes AI-Agent-Dev-Team</h3>
+        <p>Ich stelle dir ein Team aus spezialisierten AI-Agents auf, das autonom für dich entwickelt – vom Ticket über Review und Testing bis zum fertigen Feature. Du gibst Feedback, nicht Anweisungen.</p>
+      </div>
+    </div>
+    <div class="wid-step">
+      <div class="wid-step-number">03</div>
+      <div class="wid-step-content">
+        <h3>Weiterentwicklung & Übergabe</h3>
+        <p>Dein Agent-Team entwickelt strukturiert weiter – keine "MVP und dann Stille". Ich betreibe es für dich, oder übergebe dir ein laufendes System mit Board und Dokumentation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section>
+  <div class="section-label">Zusammenarbeit</div>
+  <h2>Wähle das Level, das zu dir passt</h2>
+  <div class="packages">
+    <div class="package">
+      <div class="package-label">Self-Service</div>
+      <h3>Du machst es selbst</h3>
+      <p>Just Ship ist Open Source. Du richtest dir dein Agent-Team selbst ein – mit Dokumentation und Community-Support.</p>
+      <a href="https://just-ship.io" target="_blank" class="package-link">just-ship.io →</a>
+    </div>
+    <div class="package package-highlight">
+      <div class="package-label">Zusammen</div>
+      <h3>Wir machen es zusammen</h3>
+      <p>Ich richte dein Agent-Team ein, mache dich handlungsfähig und unterstütze dich laufend bei Fragen und Optimierung.</p>
+    </div>
+    <div class="package">
+      <div class="package-label">Full Service</div>
+      <h3>Ich mach's für dich</h3>
+      <p>Du sagst was du brauchst, ich liefere fertige Software. Komplett-Entwicklung mit Übergabe eines laufenden Systems.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section>
+  <div class="section-label">Ergebnisse</div>
+  <h2>Echte Produkte. Autonom gebaut.</h2>
+  <p class="section-intro">Jedes Feature wird von einem Menschen geprüft – gebaut wird es vom Agent-Team.</p>
+  <div class="cases-grid">
+    <div class="case-card">
+      <div class="case-card-label">App</div>
+      <h3>Aime</h3>
+      <p>AI-gestützte Produktivitätsplattform. Komplett über das Agent-Team entwickelt.</p>
+      <div class="case-card-stat">300+ <span>Features ausgeliefert</span></div>
+    </div>
+    <div class="case-card">
+      <div class="case-card-label">Website</div>
+      <h3>19ELF</h3>
+      <p>Vereins-Website, vollständig autonom gebaut und laufend weiterentwickelt.</p>
+      <div class="case-card-stat">100% <span>autonome Entwicklung</span></div>
+    </div>
+    <div class="case-card">
+      <div class="case-card-label">Enterprise</div>
+      <h3>Health & Wellness Brand</h3>
+      <p>Technische Transformation – ERP, CRM, Website, Tracking, Automatisierung.</p>
+      <div class="case-card-stat">5+ <span>Systeme parallel</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section>
+  <div class="section-label">Über mich</div>
+  <h2>Yves Schleich</h2>
+  <div class="about-content">
+    <div class="about-avatar">YS</div>
+    <div class="about-text">
+      <p>Creator von <a href="https://just-ship.io" target="_blank" style="color: var(--emerald); text-decoration: none; border-bottom: 1px solid var(--emerald-glow-strong);">Just Ship</a>. Tech Lead Operations bei einem führenden Health-Unternehmen. 8 Jahre eigenes Unternehmen gegründet und geführt. Über 10 Jahre Erfahrung in E-Commerce, Tech-Architektur und digitaler Transformation.</p>
+      <p>Ich baue keine Prototypen – ich baue Systeme, die im Produktivbetrieb laufen. Mit einer Pipeline, die ich selbst täglich nutze.</p>
+      <div class="about-tags">
+        <span class="about-tag">D2C / E-Commerce</span>
+        <span class="about-tag">Shopify</span>
+        <span class="about-tag">AI Agents</span>
+        <span class="about-tag">ERP / CRM</span>
+        <span class="about-tag">Automatisierung</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<div class="waitlist" id="waitlist">
+  <div class="section-label">Early Access</div>
+  <h2>Interesse? Trag dich ein.</h2>
+  <p>Ich starte mit einer kleinen Gruppe. Trag dich auf die Warteliste ein – ich melde mich persönlich bei dir.</p>
+  <div class="waitlist-form">
+    <input type="email" class="waitlist-input" placeholder="deine@email.de">
+    <button class="waitlist-btn">Eintragen</button>
+  </div>
+  <p class="waitlist-note">Kein Spam. Kein Newsletter. Nur eine persönliche Nachricht von mir.</p>
+</div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- TECH HALF – Under the Hood          -->
+<!-- ═══════════════════════════════════ -->
+
+<div class="tech-divider">
+  <div class="tech-divider-line"></div>
+  <div class="tech-divider-label">Unter der Haube</div>
+  <div class="tech-divider-line"></div>
+</div>
+
+<!-- JUST SHIP -->
+<section>
+  <div class="section-label">Mein Werkzeug</div>
+  <h2>Powered by Just Ship</h2>
+  <p class="section-intro">Hinter allem steht <strong>Just Ship</strong> – ein Open-Source Multi-Agent-Framework, das ich selbst entwickelt habe und täglich einsetze.</p>
+  <div class="justship-hero">
+    <div class="justship-hero-header">
+      <span class="justship-logo">just-ship</span>
+      <span class="justship-oss">Open Source · MIT</span>
+    </div>
+    <p>7 spezialisierte AI-Agents arbeiten autonom an deinem Projekt – vom Ticket über Code Review und Testing bis zum Deployment. Mit Live Board, Smart Cost Routing und einem VPS Worker, der rund um die Uhr arbeitet.</p>
+    <div class="justship-stats">
+      <div class="js-stat">
+        <div class="js-stat-val">7 Agents</div>
+        <div class="js-stat-label">Orchestrator bis Security</div>
+      </div>
+      <div class="js-stat">
+        <div class="js-stat-val">17 Skills</div>
+        <div class="js-stat-label">TDD, Reviews, Design ...</div>
+      </div>
+      <div class="js-stat">
+        <div class="js-stat-val">24/7</div>
+        <div class="js-stat-label">Autonomer VPS Worker</div>
+      </div>
+      <div class="js-stat">
+        <div class="js-stat-val">~4-8 €/mo</div>
+        <div class="js-stat-label">Self-hosted, kein Vendor Lock-in</div>
+      </div>
+    </div>
+    <a href="https://just-ship.io" target="_blank" class="justship-link">just-ship.io →</a>
+  </div>
+
+  <!-- Agents -->
+  <div class="agents-grid">
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">Orchestrator</span>
+        <span class="agent-model">Opus</span>
+      </div>
+      <div class="agent-desc">Plant, delegiert und reviewed den gesamten Ticket-Lifecycle</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">Backend</span>
+        <span class="agent-model">Sonnet</span>
+      </div>
+      <div class="agent-desc">API-Endpoints, Business Logic, Shared Hooks</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">Frontend</span>
+        <span class="agent-model">Sonnet</span>
+      </div>
+      <div class="agent-desc">UI-Komponenten mit hoher Design-Qualität</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">Data Engineer</span>
+        <span class="agent-model">Haiku</span>
+      </div>
+      <div class="agent-desc">Migrationen, RLS Policies, Schema Changes</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">DevOps</span>
+        <span class="agent-model">Haiku</span>
+      </div>
+      <div class="agent-desc">Build Checks, TypeScript, Lint Fixes</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">QA</span>
+        <span class="agent-model">Haiku</span>
+      </div>
+      <div class="agent-desc">Acceptance Criteria Verification & Tests</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-header">
+        <span class="agent-name">Security</span>
+        <span class="agent-model">Haiku</span>
+      </div>
+      <div class="agent-desc">Auth, RLS, Input Validation, Secrets Review</div>
+    </div>
+  </div>
+
+  <!-- Terminal -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <div class="terminal-dot"></div>
+      <span class="terminal-title">terminal</span>
+    </div>
+    <div class="terminal-body">
+      <span class="comment"># Beschreib was du brauchst</span><br>
+      <span class="cmd">$ /ticket</span> Add user authentication<br><br>
+      <span class="comment"># Agents starten</span><br>
+      <span class="cmd">$ /develop</span> <span class="flag">T-1</span><br><br>
+      <span class="comment"># Merge, deploy, fertig</span><br>
+      <span class="cmd">$ /ship</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Yves Schleich</span>
+  <a href="https://just-ship.io" target="_blank">just-ship.io</a>
+  <a href="https://github.com/yves-s/just-ship" target="_blank">GitHub</a>
+  <a href="https://www.linkedin.com/in/yves-schleich/" target="_blank">LinkedIn</a>
+</footer>
+
+</body>
+</html>
