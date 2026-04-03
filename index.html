@@ -1244,27 +1244,6 @@
     border-radius: 12px 12px 0 0;
   }
 
-  .calc-prompt-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .calc-prompt-label .calc-cursor {
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: var(--emerald);
-    border-radius: 1px;
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink { 50% { opacity: 0; } }
-
   .calc-textarea {
     width: 100%;
     min-height: 120px;
@@ -1714,10 +1693,6 @@
     <!-- Step 1: Project Input -->
     <div class="calc-step active" id="calc-step-1">
       <div class="calc-prompt-box">
-        <div class="calc-prompt-label">
-          <span class="calc-cursor"></span>
-          Beschreib dein Projekt
-        </div>
         <label for="calc-idea" class="sr-only">Projektbeschreibung</label>
         <textarea id="calc-idea" class="calc-textarea" placeholder="z.B. Ich brauche einen Online-Shop mit Kundenkonto, Warenkorb und Anbindung an mein Warenwirtschaftssystem. Dazu ein Dashboard fuer mein Team mit Bestelluebersicht und Lagerbestand..." maxlength="2000"></textarea>
         <div class="calc-char-count"><span id="calc-chars">0</span> / 2.000</div>
