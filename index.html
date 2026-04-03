@@ -1424,145 +1424,104 @@
     animation: spin 0.8s linear infinite;
   }
 
-  .calc-results-header { margin-bottom: 0.5rem; }
-  .calc-results-header h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem; }
-  .calc-results-header p { font-size: 0.85rem; color: var(--text-secondary); }
-
-  .calc-results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    margin-top: 1rem;
+  .calc-scope-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 2rem;
+    position: relative;
   }
 
-  .calc-result-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
+  .calc-scope-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--emerald), var(--coral), var(--lavender));
+    border-radius: 12px 12px 0 0;
+  }
+
+  .calc-scope-card h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .calc-scope-meta {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .calc-scope-meta-item {
     display: flex;
     flex-direction: column;
-    transition: border-color 0.2s;
+    gap: 0.2rem;
   }
 
-  .calc-result-card:hover { border-color: rgba(255,255,255,0.12); }
-
-  .calc-result-card.highlight {
-    border-color: rgba(46, 139, 87, 0.3);
-    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(46, 139, 87, 0.08) 100%);
-  }
-
-  .calc-result-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 600;
+  .calc-scope-meta-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-  }
-
-  .calc-result-card.highlight .calc-result-label { color: var(--emerald); }
-
-  .calc-result-price {
+    letter-spacing: 0.08em;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
   }
 
-  .calc-result-card.highlight .calc-result-price { color: var(--emerald); }
-
-  .calc-result-duration {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
+  .calc-scope-meta-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    font-weight: 600;
   }
 
-  .calc-result-process {
+  .calc-scope-meta-value.highlight {
+    color: var(--emerald);
+  }
+
+  .calc-scope-feature-list {
+    list-style: none;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.4rem;
-    padding: 0.75rem 0;
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-    flex-wrap: wrap;
   }
 
-  .calc-process-step {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
+  .calc-scope-feature-list li {
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    white-space: nowrap;
-  }
-
-  .calc-result-card.highlight .calc-process-step {
-    background: var(--emerald-glow);
-    border-color: rgba(46, 139, 87, 0.2);
-    color: var(--emerald);
-  }
-
-  .calc-process-arrow {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-  }
-
-  .calc-result-outcome {
-    font-size: 0.78rem;
-    color: var(--text-muted);
+    padding-left: 1.25rem;
+    position: relative;
     line-height: 1.5;
-    padding-bottom: 0.5rem;
   }
 
-  .calc-result-outcome.highlight-outcome {
-    color: var(--text-secondary);
-  }
-
-  .calc-result-savings {
-    margin-top: 0.75rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid rgba(46, 139, 87, 0.15);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 600;
+  .calc-scope-feature-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
     color: var(--emerald);
-    text-align: center;
-  }
-
-  .calc-result-cta { margin-top: 1rem; }
-
-  .calc-result-cta a {
-    display: block;
-    text-align: center;
-    padding: 0.65rem 1rem;
-    border-radius: 8px;
-    font-size: 0.82rem;
     font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s;
   }
 
-  .calc-result-card.highlight .calc-result-cta a {
-    background: var(--emerald);
-    color: #fff;
+  .calc-scope-assumptions {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
   }
 
-  .calc-result-card.highlight .calc-result-cta a:hover {
-    background: var(--emerald-light);
-    transform: translateY(-1px);
+  .calc-scope-assumptions li {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    padding-left: 1.25rem;
+    position: relative;
+    line-height: 1.5;
   }
 
-  .calc-result-card:not(.highlight) .calc-result-cta a {
-    border: 1px solid var(--border-light);
-    color: var(--text-secondary);
-  }
-
-  .calc-result-card:not(.highlight) .calc-result-cta a:hover {
-    background: rgba(255,255,255,0.04);
+  .calc-scope-assumptions li::before {
+    content: '·';
+    position: absolute;
+    left: 0.25rem;
+    font-weight: 700;
   }
 
   .calc-results-footer { text-align: center; margin-top: 1rem; }
@@ -1587,27 +1546,6 @@
   .calc-restart-btn:hover { color: var(--text-secondary); }
 
   .calc-pending-api { opacity: 0.35; }
-
-  .calc-result-breakdown {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
-    margin-top: auto;
-  }
-
-  .calc-result-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.78rem;
-    color: var(--text-secondary);
-  }
-
-  .calc-result-row .row-val {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-  }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
@@ -1643,8 +1581,7 @@
     .calc-prompt-hint { text-align: center; }
     .calc-email-box { padding: 1.75rem; }
     .calc-email-form { flex-direction: column; }
-    .calc-results-grid { grid-template-columns: 1fr; }
-    .calc-result-price { font-size: 1.3rem; }
+    .calc-scope-meta { flex-direction: column; gap: 1rem; }
   }
 </style>
 </head>
@@ -1683,11 +1620,11 @@
   <p class="hero-note">Kein Agentur-Vertrag. Kein Hiring. Erste Ergebnisse in Tagen.</p>
 </div>
 
-<!-- COST CALCULATOR -->
+<!-- PROJECT ANALYZER -->
 <div class="calc-section" id="rechner">
-  <div class="section-label">Kostenrechner</div>
-  <h2>Was kostet dein Projekt?</h2>
-  <p class="section-intro">Beschreib deine Idee und erhalte eine realistische Kostenschätzung – Team vs. Freelancer vs. AI-Agent-Team.</p>
+  <div class="section-label">Projektanalyse</div>
+  <h2>Was steckt in deinem Projekt?</h2>
+  <p class="section-intro">Beschreib deine Idee – unsere AI analysiert Umfang, Komplexität und Zeitrahmen.</p>
 
   <div class="calc-container">
     <!-- Step 1: Project Input -->
@@ -1697,8 +1634,8 @@
         <textarea id="calc-idea" class="calc-textarea" placeholder="z.B. Ich brauche einen Online-Shop mit Kundenkonto, Warenkorb und Anbindung an mein Warenwirtschaftssystem. Dazu ein Dashboard für mein Team mit Bestellübersicht und Lagerbestand..." maxlength="2000"></textarea>
         <div class="calc-char-count"><span id="calc-chars">0</span> / 2.000</div>
         <div class="calc-prompt-actions">
-          <span class="calc-prompt-hint">Je detaillierter, desto genauer die Schätzung.</span>
-          <button class="calc-btn" id="calc-next-1" disabled>Kosten berechnen</button>
+          <span class="calc-prompt-hint">Je detaillierter, desto genauer die Analyse.</span>
+          <button class="calc-btn" id="calc-next-1" disabled>Projekt analysieren</button>
         </div>
       </div>
     </div>
@@ -1718,11 +1655,11 @@
           </div>
           <div class="calc-loading-step calc-pending-api" data-step="2">
             <span class="step-icon"></span>
-            <span>Marktpreise kalkulieren</span>
+            <span>Scope analysieren</span>
           </div>
           <div class="calc-loading-step calc-pending-api" data-step="3">
             <span class="step-icon"></span>
-            <span>Kostenvergleich erstellen</span>
+            <span>Projektanalyse erstellen</span>
           </div>
         </div>
       </div>
@@ -1762,67 +1699,50 @@
           </div>
           <div class="calc-loading-step" data-step="0">
             <span class="step-icon"></span>
-            <span>Marktpreise kalkulieren</span>
+            <span>Scope analysieren</span>
           </div>
           <div class="calc-loading-step" data-step="1">
             <span class="step-icon"></span>
-            <span>Kostenvergleich erstellen</span>
+            <span>Projektanalyse erstellen</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Step 3: Loading Animation -->
-    <div class="calc-step" id="calc-step-3">
-      <div class="calc-loading-box">
-        <div class="calc-loading-title">Analysiere dein Projekt ...</div>
-        <div class="calc-loading-steps">
-          <div class="calc-loading-step" data-step="0">
-            <span class="step-icon"></span>
-            <span>Projektumfang erfassen</span>
-          </div>
-          <div class="calc-loading-step" data-step="1">
-            <span class="step-icon"></span>
-            <span>Technische Komplexität bewerten</span>
-          </div>
-          <div class="calc-loading-step" data-step="2">
-            <span class="step-icon"></span>
-            <span>Marktpreise kalkulieren</span>
-          </div>
-          <div class="calc-loading-step" data-step="3">
-            <span class="step-icon"></span>
-            <span>Kostenvergleich erstellen</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Step 5: Results -->
+    <!-- Step 5: Scope Result -->
     <div class="calc-step" id="calc-step-5">
-      <div class="calc-results-header">
-        <h3 id="calc-scope-title">Deine Kostenschätzung</h3>
-        <p id="calc-scope-summary"></p>
+      <div class="calc-scope-card">
+        <h3 id="calc-scope-title"></h3>
+        <p id="calc-scope-summary" style="color:var(--text-secondary);line-height:1.7;margin-bottom:1.25rem;"></p>
+
+        <div class="calc-scope-meta">
+          <div class="calc-scope-meta-item">
+            <span class="calc-scope-meta-label">Komplexität</span>
+            <span class="calc-scope-meta-value" id="calc-scope-complexity"></span>
+          </div>
+          <div class="calc-scope-meta-item">
+            <span class="calc-scope-meta-label">Geschätzte Umsetzung</span>
+            <span class="calc-scope-meta-value highlight" id="calc-scope-timeline"></span>
+          </div>
+        </div>
+
+        <div id="calc-scope-features" style="margin-top:1.25rem;"></div>
+        <div id="calc-scope-assumptions" style="margin-top:1rem;"></div>
       </div>
-
-      <!-- Scope Features -->
-      <div id="calc-scope-features" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin:0.75rem 0 1rem;"></div>
-
-      <div class="calc-results-grid" id="calc-results-grid"></div>
 
       <div class="calc-results-footer">
-        <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:0.75rem;">
+        <div style="display:flex;gap:0.75rem;justify-content:center;margin-top:1.5rem;margin-bottom:0.75rem;">
           <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer" class="calc-btn">Projekt besprechen</a>
           <a href="#" id="calc-intake-link" class="calc-btn" style="background:transparent;border:1px solid var(--border-light);color:var(--text-secondary);">Details verfeinern</a>
         </div>
-        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;">Alle Angaben sind Schätzwerte basierend auf AI-Analyse und Marktdaten.</p>
-        <button class="calc-restart-btn" id="calc-restart">Neue Berechnung starten</button>
+        <button class="calc-restart-btn" id="calc-restart">Neue Analyse starten</button>
       </div>
     </div>
 
     <!-- Step Error -->
     <div class="calc-step" id="calc-step-error">
       <div class="calc-email-box">
-        <h3 style="color:var(--coral);">Fehler bei der Kalkulation</h3>
+        <h3 style="color:var(--coral);">Fehler bei der Analyse</h3>
         <p id="calc-error-msg" style="margin-bottom:1.5rem;"></p>
         <button class="calc-btn" id="calc-error-retry">Nochmal versuchen</button>
       </div>
@@ -2331,10 +2251,6 @@ async function submitNewsletter() {
     });
   }
 
-  function formatEur(n) {
-    return n.toLocaleString('de-DE') + ' \u20AC';
-  }
-
   function escapeHtml(str) {
     var div = document.createElement('div');
     div.appendChild(document.createTextNode(str));
@@ -2342,66 +2258,51 @@ async function submitNewsletter() {
   }
 
   function displayResults(data) {
-    // Scope
-    document.getElementById('calc-scope-title').textContent = data.scope.title || 'Deine Kostenschätzung';
-    document.getElementById('calc-scope-summary').textContent = data.scope.summary || '';
+    var scope = data.scope || {};
 
-    // Features tags
+    // Title + Summary
+    document.getElementById('calc-scope-title').textContent = scope.title || 'Deine Projektanalyse';
+    document.getElementById('calc-scope-summary').textContent = scope.summary || '';
+
+    // Meta: Complexity + Timeline
+    document.getElementById('calc-scope-complexity').textContent = scope.complexity || '';
+    document.getElementById('calc-scope-timeline').textContent = scope.timeline || '';
+
+    // Features
     var featuresEl = document.getElementById('calc-scope-features');
     featuresEl.innerHTML = '';
-    (data.scope.features || []).forEach(function(f) {
-      var tag = document.createElement('span');
-      tag.className = 'about-tag';
-      tag.textContent = f;
-      featuresEl.appendChild(tag);
-    });
+    if (scope.features && scope.features.length) {
+      var fTitle = document.createElement('div');
+      fTitle.style.cssText = 'font-size:0.78rem;font-weight:600;color:var(--text-muted);margin-bottom:0.5rem;';
+      fTitle.textContent = 'Was gebaut wird';
+      featuresEl.appendChild(fTitle);
+      var fList = document.createElement('ul');
+      fList.className = 'calc-scope-feature-list';
+      scope.features.forEach(function(f) {
+        var li = document.createElement('li');
+        li.textContent = f;
+        fList.appendChild(li);
+      });
+      featuresEl.appendChild(fList);
+    }
 
-    // Build comparison cards
-    var grid = document.getElementById('calc-results-grid');
-    grid.innerHTML = '';
-
-    var entries = [
-      { key: 'team', label: 'Eigenes Team', highlight: false },
-      { key: 'freelancer', label: 'Agentur / Freelancer', highlight: false },
-      { key: 'ai_team', label: 'Mit AI-Agent-Team', highlight: true }
-    ];
-
-    entries.forEach(function(entry) {
-      var c = data.comparison[entry.key];
-      if (!c) return;
-
-      var card = document.createElement('div');
-      card.className = 'calc-result-card' + (entry.highlight ? ' highlight' : '');
-
-      var breakdownHtml = '';
-      if (c.breakdown) {
-        var rows = '';
-        Object.keys(c.breakdown).forEach(function(k) {
-          rows += '<div class="calc-result-row"><span>' + escapeHtml(k) + '</span><span class="row-val">' + formatEur(c.breakdown[k]) + '</span></div>';
-        });
-        breakdownHtml = '<div class="calc-result-breakdown" style="display:flex;flex-direction:column;gap:0.4rem;padding-top:0.75rem;border-top:1px solid var(--border);margin-top:auto;">' + rows + '</div>';
-      }
-
-      var savingsHtml = entry.highlight
-        ? '<div class="calc-result-savings">In Wochen statt Monaten. Mit Übergabe statt Abhängigkeit.</div>'
-        : '';
-
-      var ctaHtml = entry.highlight
-        ? '<div class="calc-result-cta"><a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Projekt besprechen</a></div>'
-        : '<div class="calc-result-cta"><a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Vergleich besprechen</a></div>';
-
-      card.innerHTML =
-        '<div class="calc-result-label">' + escapeHtml(entry.label) + '</div>' +
-        '<div class="calc-result-price">' + formatEur(c.price) + '</div>' +
-        '<div class="calc-result-duration">' + escapeHtml(c.timeline) + '</div>' +
-        (c.description ? '<div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin-bottom:0.5rem;">' + escapeHtml(c.description) + '</div>' : '') +
-        (c.result ? '<div class="calc-result-outcome' + (entry.highlight ? ' highlight-outcome' : '') + '">' + escapeHtml(c.result) + '</div>' : '') +
-        breakdownHtml +
-        savingsHtml +
-        ctaHtml;
-
-      grid.appendChild(card);
-    });
+    // Assumptions
+    var assumptionsEl = document.getElementById('calc-scope-assumptions');
+    assumptionsEl.innerHTML = '';
+    if (scope.assumptions && scope.assumptions.length) {
+      var aTitle = document.createElement('div');
+      aTitle.style.cssText = 'font-size:0.72rem;font-weight:600;color:var(--text-muted);margin-bottom:0.4rem;';
+      aTitle.textContent = 'Annahmen';
+      assumptionsEl.appendChild(aTitle);
+      var aList = document.createElement('ul');
+      aList.className = 'calc-scope-assumptions';
+      scope.assumptions.forEach(function(a) {
+        var li = document.createElement('li');
+        li.textContent = a;
+        aList.appendChild(li);
+      });
+      assumptionsEl.appendChild(aList);
+    }
 
     // Intake link
     var intakeLink = document.getElementById('calc-intake-link');
