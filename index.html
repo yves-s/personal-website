@@ -1500,25 +1500,47 @@
     margin-bottom: 1rem;
   }
 
-  .calc-result-breakdown {
+  .calc-result-process {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 0.4rem;
-    padding-top: 0.75rem;
+    padding: 0.75rem 0;
     border-top: 1px solid var(--border);
     margin-top: auto;
+    flex-wrap: wrap;
   }
 
-  .calc-result-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.78rem;
-    color: var(--text-secondary);
-  }
-
-  .calc-result-row .row-val {
+  .calc-process-step {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .calc-result-card.highlight .calc-process-step {
+    background: var(--emerald-glow);
+    border-color: rgba(46, 139, 87, 0.2);
+    color: var(--emerald);
+  }
+
+  .calc-process-arrow {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  .calc-result-outcome {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding-bottom: 0.5rem;
+  }
+
+  .calc-result-outcome.highlight-outcome {
+    color: var(--text-secondary);
   }
 
   .calc-result-savings {
@@ -1584,6 +1606,29 @@
   }
 
   .calc-restart-btn:hover { color: var(--text-secondary); }
+
+  .calc-pending-api { opacity: 0.35; }
+
+  .calc-result-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
+  .calc-result-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+  }
+
+  .calc-result-row .row-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+  }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
@@ -1683,20 +1728,72 @@
       </div>
     </div>
 
-    <!-- Step 2: Email Gate -->
+    <!-- Step 2: Committing (Fake animation steps 1-2, then email) -->
     <div class="calc-step" id="calc-step-2">
+      <div class="calc-loading-box" id="calc-committing-box">
+        <div class="calc-loading-title">Analysiere dein Projekt ...</div>
+        <div class="calc-loading-steps" id="calc-committing-steps">
+          <div class="calc-loading-step" data-step="0">
+            <span class="step-icon"></span>
+            <span>Projektumfang erfassen</span>
+          </div>
+          <div class="calc-loading-step" data-step="1">
+            <span class="step-icon"></span>
+            <span>Technische Komplexitaet bewerten</span>
+          </div>
+          <div class="calc-loading-step calc-pending-api" data-step="2">
+            <span class="step-icon"></span>
+            <span>Marktpreise kalkulieren</span>
+          </div>
+          <div class="calc-loading-step calc-pending-api" data-step="3">
+            <span class="step-icon"></span>
+            <span>Kostenvergleich erstellen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Email Collection -->
+    <div class="calc-step" id="calc-step-3">
       <div class="calc-email-box">
         <div class="calc-email-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E8B57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
         </div>
-        <h3>Fast geschafft</h3>
-        <p>Trag deine E-Mail ein und erhalte sofort deine Kostenschaetzung – plus Updates zu AI-Development.</p>
-        <div class="calc-email-form">
+        <h3>Fast fertig</h3>
+        <p>Wohin sollen wir das Ergebnis schicken?</p>
+        <div class="calc-email-form" style="flex-direction: column;">
+          <label for="calc-name" class="sr-only">Vorname</label>
+          <input type="text" id="calc-name" class="calc-email-input" placeholder="Vorname" autocomplete="given-name" required>
           <label for="calc-email" class="sr-only">E-Mail-Adresse</label>
           <input type="email" id="calc-email" class="calc-email-input" placeholder="deine@email.de" autocomplete="email" required>
-          <button class="calc-btn" id="calc-next-2">Berechnen</button>
+          <button class="calc-btn" id="calc-next-2" style="width: 100%;">Ergebnis anzeigen</button>
         </div>
         <p class="calc-email-note">Kein Spam. Jederzeit abbestellbar. <a href="/datenschutz.html">Datenschutz</a></p>
+      </div>
+    </div>
+
+    <!-- Step 4: Calculating (Real API call, steps 3-4 animation) -->
+    <div class="calc-step" id="calc-step-4">
+      <div class="calc-loading-box">
+        <div class="calc-loading-title">Analysiere dein Projekt ...</div>
+        <div class="calc-loading-steps" id="calc-calculating-steps">
+          <div class="calc-loading-step done">
+            <span class="step-icon">&#10003;</span>
+            <span>Projektumfang erfassen</span>
+          </div>
+          <div class="calc-loading-step done">
+            <span class="step-icon">&#10003;</span>
+            <span>Technische Komplexitaet bewerten</span>
+          </div>
+          <div class="calc-loading-step" data-step="0">
+            <span class="step-icon"></span>
+            <span>Marktpreise kalkulieren</span>
+          </div>
+          <div class="calc-loading-step" data-step="1">
+            <span class="step-icon"></span>
+            <span>Kostenvergleich erstellen</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1725,60 +1822,34 @@
       </div>
     </div>
 
-    <!-- Step 4: Results -->
-    <div class="calc-step" id="calc-step-4">
+    <!-- Step 5: Results -->
+    <div class="calc-step" id="calc-step-5">
       <div class="calc-results-header">
-        <h3>Deine Kostenschaetzung</h3>
-        <p id="calc-results-summary"></p>
+        <h3 id="calc-scope-title">Deine Kostenschaetzung</h3>
+        <p id="calc-scope-summary"></p>
       </div>
-      <div class="calc-results-grid">
-        <!-- Team Card -->
-        <div class="calc-result-card">
-          <div class="calc-result-label">Eigenes Team</div>
-          <div class="calc-result-price" id="calc-price-team"></div>
-          <div class="calc-result-duration" id="calc-duration-team"></div>
-          <div class="calc-result-breakdown">
-            <div class="calc-result-row"><span>Entwicklung</span><span class="row-val" id="calc-dev-team"></span></div>
-            <div class="calc-result-row"><span>Recruiting & Onboarding</span><span class="row-val" id="calc-overhead-team"></span></div>
-            <div class="calc-result-row"><span>Management</span><span class="row-val" id="calc-mgmt-team"></span></div>
-          </div>
-          <div class="calc-result-cta">
-            <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Vergleich besprechen</a>
-          </div>
-        </div>
-        <!-- Freelancer Card -->
-        <div class="calc-result-card">
-          <div class="calc-result-label">Freelancer</div>
-          <div class="calc-result-price" id="calc-price-freelancer"></div>
-          <div class="calc-result-duration" id="calc-duration-freelancer"></div>
-          <div class="calc-result-breakdown">
-            <div class="calc-result-row"><span>Entwicklung</span><span class="row-val" id="calc-dev-freelancer"></span></div>
-            <div class="calc-result-row"><span>Projektmanagement</span><span class="row-val" id="calc-overhead-freelancer"></span></div>
-            <div class="calc-result-row"><span>QA & Testing</span><span class="row-val" id="calc-mgmt-freelancer"></span></div>
-          </div>
-          <div class="calc-result-cta">
-            <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Vergleich besprechen</a>
-          </div>
-        </div>
-        <!-- JustShip Card -->
-        <div class="calc-result-card highlight">
-          <div class="calc-result-label">Mit AI-Agent-Team</div>
-          <div class="calc-result-price" id="calc-price-justship"></div>
-          <div class="calc-result-duration" id="calc-duration-justship"></div>
-          <div class="calc-result-breakdown">
-            <div class="calc-result-row"><span>AI-Entwicklung</span><span class="row-val" id="calc-dev-justship"></span></div>
-            <div class="calc-result-row"><span>Architektur & Review</span><span class="row-val" id="calc-overhead-justship"></span></div>
-            <div class="calc-result-row"><span>Testing & Deployment</span><span class="row-val" id="calc-mgmt-justship"></span></div>
-          </div>
-          <div class="calc-result-savings" id="calc-savings"></div>
-          <div class="calc-result-cta">
-            <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Projekt besprechen</a>
-          </div>
-        </div>
-      </div>
+
+      <!-- Scope Features -->
+      <div id="calc-scope-features" style="display:flex;flex-wrap:wrap;gap:0.4rem;margin:0.75rem 0 1rem;"></div>
+
+      <div class="calc-results-grid" id="calc-results-grid"></div>
+
       <div class="calc-results-footer">
-        <p>Alle Angaben sind Schaetzwerte basierend auf Erfahrungswerten und Marktdaten. Individuelle Beratung fuer genaue Zahlen.</p>
+        <div style="display:flex;gap:0.75rem;justify-content:center;margin-bottom:0.75rem;">
+          <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer" class="calc-btn">Projekt besprechen</a>
+          <a href="#" id="calc-intake-link" class="calc-btn" style="background:transparent;border:1px solid var(--border-light);color:var(--text-secondary);">Details verfeinern</a>
+        </div>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;">Alle Angaben sind Schaetzwerte basierend auf AI-Analyse und Marktdaten.</p>
         <button class="calc-restart-btn" id="calc-restart">Neue Berechnung starten</button>
+      </div>
+    </div>
+
+    <!-- Step Error -->
+    <div class="calc-step" id="calc-step-error">
+      <div class="calc-email-box">
+        <h3 style="color:var(--coral);">Fehler bei der Kalkulation</h3>
+        <p id="calc-error-msg" style="margin-bottom:1.5rem;"></p>
+        <button class="calc-btn" id="calc-error-retry">Nochmal versuchen</button>
       </div>
     </div>
   </div>
@@ -2154,77 +2225,39 @@ async function submitNewsletter() {
 
 // ── COST CALCULATOR ──
 (function() {
-  const textarea = document.getElementById('calc-idea');
-  const charCount = document.getElementById('calc-chars');
-  const nextBtn1 = document.getElementById('calc-next-1');
-  const nextBtn2 = document.getElementById('calc-next-2');
-  const emailInput = document.getElementById('calc-email');
-  const restartBtn = document.getElementById('calc-restart');
+  var CALC_API = 'https://board.just-ship.io/api/public/calculator';
+  var CALC_KEY = 'adp_91e6147a15c5149ff9660601ab56d4ea0340c104cdc88c63c1daf4086d5e0d56';
+  var INTAKE_URL = 'https://board.just-ship.io/intake';
 
-  let projectIdea = '';
+  var textarea = document.getElementById('calc-idea');
+  var charCount = document.getElementById('calc-chars');
+  var nextBtn1 = document.getElementById('calc-next-1');
+  var nextBtn2 = document.getElementById('calc-next-2');
+  var nameInput = document.getElementById('calc-name');
+  var emailInput = document.getElementById('calc-email');
+  var restartBtn = document.getElementById('calc-restart');
+  var errorRetryBtn = document.getElementById('calc-error-retry');
+
+  var projectIdea = '';
 
   // Character count & button state
-  textarea.addEventListener('input', () => {
-    const len = textarea.value.length;
+  textarea.addEventListener('input', function() {
+    var len = textarea.value.length;
     charCount.textContent = len.toLocaleString('de-DE');
     nextBtn1.disabled = len < 20;
   });
 
   // Step navigation
-  function showStep(n) {
-    document.querySelectorAll('.calc-step').forEach(s => s.classList.remove('active'));
-    document.getElementById('calc-step-' + n).classList.add('active');
+  function showStep(id) {
+    document.querySelectorAll('.calc-step').forEach(function(s) { s.classList.remove('active'); });
+    document.getElementById('calc-step-' + id).classList.add('active');
   }
 
-  // Step 1 → Step 2
-  nextBtn1.addEventListener('click', () => {
-    projectIdea = textarea.value.trim();
-    if (projectIdea.length < 20) return;
-    showStep(2);
-    emailInput.focus();
-  });
-
-  // Step 2 → Step 3 (email + calculate)
-  nextBtn2.addEventListener('click', () => submitCalcEmail());
-  emailInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); submitCalcEmail(); }
-  });
-
-  async function submitCalcEmail() {
-    const email = emailInput.value.trim().toLowerCase();
-    if (!email || !email.includes('@') || !email.includes('.')) {
-      emailInput.style.borderColor = '#FF6F61';
-      setTimeout(() => emailInput.style.borderColor = '', 2000);
-      return;
-    }
-
-    nextBtn2.textContent = '...';
-    nextBtn2.disabled = true;
-
-    // Register for newsletter (reuse existing Supabase endpoint)
-    try {
-      await fetch(SUPABASE_URL + '/rest/v1/waitlist', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_KEY,
-          'Authorization': 'Bearer ' + SUPABASE_KEY,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ email: email })
-      });
-    } catch (_) { /* silently continue even if signup fails */ }
-
-    showStep(3);
-    runCalculation();
-  }
-
-  // Step 3: Animated loading then calculate
-  function runCalculation() {
-    const steps = document.querySelectorAll('.calc-loading-step');
-    let i = 0;
-
-    function activateStep() {
+  // Animate steps in a container
+  function animateSteps(container, onDone) {
+    var steps = container.querySelectorAll('.calc-loading-step[data-step]');
+    var i = 0;
+    function next() {
       if (i > 0) {
         steps[i - 1].classList.remove('active');
         steps[i - 1].classList.add('done');
@@ -2233,150 +2266,193 @@ async function submitNewsletter() {
       if (i < steps.length) {
         steps[i].classList.add('active');
         i++;
-        setTimeout(activateStep, 700 + Math.random() * 500);
-      } else {
-        setTimeout(() => {
-          const results = calculateCosts(projectIdea);
-          displayResults(results);
-          showStep(4);
-        }, 400);
+        setTimeout(next, 800 + Math.random() * 400);
+      } else if (onDone) {
+        setTimeout(onDone, 300);
       }
     }
-
-    // Reset steps
-    steps.forEach(s => {
+    steps.forEach(function(s) {
       s.classList.remove('active', 'done');
       s.querySelector('.step-icon').innerHTML = '';
     });
-    activateStep();
+    next();
   }
 
-  // Cost calculation engine
-  function calculateCosts(text) {
-    const lower = text.toLowerCase();
-    const len = text.length;
+  // Step 1 → Step 2 (committing: fake animation steps 1-2)
+  nextBtn1.addEventListener('click', function() {
+    projectIdea = textarea.value.trim();
+    if (projectIdea.length < 20) return;
+    showStep(2);
+    var container = document.getElementById('calc-committing-steps');
+    animateSteps(container, function() {
+      showStep(3);
+      nameInput.focus();
+    });
+  });
 
-    // Complexity scoring based on keywords
-    let complexity = 0;
+  // Step 3 → Step 4 (collecting_email → calculating with real API)
+  nextBtn2.addEventListener('click', function() { submitCalcEmail(); });
+  emailInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); submitCalcEmail(); }
+  });
 
-    // Feature keywords (each adds complexity)
-    const features = {
-      high: ['ai', 'machine learning', 'ki', 'kuenstliche intelligenz', 'echtzeit', 'real-time', 'realtime', 'blockchain', 'payment', 'zahlung', 'stripe', 'api', 'schnittstelle', 'erp', 'crm', 'sap', 'migration', 'datenmigration', 'multi-tenant', 'marketplace', 'marktplatz'],
-      medium: ['dashboard', 'admin', 'backend', 'authentifizierung', 'login', 'nutzer', 'user', 'suche', 'filter', 'benachrichtigung', 'notification', 'chat', 'messaging', 'upload', 'export', 'import', 'reporting', 'statistik', 'analytics', 'tracking', 'kalender', 'buchung', 'booking', 'lager', 'inventar', 'bestellung', 'order'],
-      low: ['website', 'landingpage', 'landing page', 'blog', 'portfolio', 'formular', 'kontakt', 'newsletter', 'einfach', 'simpel', 'klein']
-    };
+  async function submitCalcEmail() {
+    var name = nameInput.value.trim();
+    var email = emailInput.value.trim().toLowerCase();
 
-    let highHits = 0, medHits = 0, lowHits = 0;
-    features.high.forEach(k => { if (lower.includes(k)) highHits++; });
-    features.medium.forEach(k => { if (lower.includes(k)) medHits++; });
-    features.low.forEach(k => { if (lower.includes(k)) lowHits++; });
+    if (!name) {
+      nameInput.style.borderColor = '#FF6F61';
+      setTimeout(function() { nameInput.style.borderColor = ''; }, 2000);
+      return;
+    }
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      emailInput.style.borderColor = '#FF6F61';
+      setTimeout(function() { emailInput.style.borderColor = ''; }, 2000);
+      return;
+    }
 
-    complexity += highHits * 3;
-    complexity += medHits * 1.5;
-    complexity += lowHits * 0.5;
+    nextBtn2.textContent = '...';
+    nextBtn2.disabled = true;
 
-    // Length factor: longer descriptions usually mean more complex projects
-    complexity += Math.min(len / 200, 3);
+    // Show calculating step with animation for steps 3-4
+    showStep(4);
+    var calcContainer = document.getElementById('calc-calculating-steps');
 
-    // Platform keywords that indicate bigger scope
-    const platforms = ['app', 'mobile', 'ios', 'android', 'shopify', 'shop', 'e-commerce', 'ecommerce', 'saas', 'plattform', 'platform'];
-    platforms.forEach(k => { if (lower.includes(k)) complexity += 1.5; });
+    // Start API call in parallel with animation
+    var apiPromise = fetch(CALC_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Pipeline-Key': CALC_KEY
+      },
+      body: JSON.stringify({
+        description: projectIdea,
+        email: email,
+        name: name
+      })
+    }).then(function(res) { return res.json().then(function(json) { return { status: res.status, json: json }; }); });
 
-    // Clamp complexity to range
-    complexity = Math.max(2, Math.min(complexity, 25));
+    // Animate remaining steps, then wait for API
+    animateSteps(calcContainer, async function() {
+      try {
+        var resp = await apiPromise;
 
-    // Base hours derived from complexity
-    const baseHours = Math.round(80 + complexity * 32);
+        if (resp.json.error) {
+          var msg = resp.json.error.message || 'Fehler bei der Kalkulation';
+          if (resp.status === 429) {
+            msg = 'Du hast heute schon mehrere Schaetzungen angefragt. Probiere es morgen nochmal!';
+          }
+          document.getElementById('calc-error-msg').textContent = msg;
+          showStep('error');
+          return;
+        }
 
-    // Team rates (German market)
-    const teamRate = 95;      // avg loaded cost per dev hour (salary + overhead)
-    const freelancerRate = 110; // senior freelancer hourly
-    const justshipRate = 45;   // AI-agent-assisted rate
-
-    // Time multipliers
-    const teamOverheadMult = 1.45;     // recruiting, onboarding, meetings, management
-    const freelancerOverheadMult = 1.25; // PM, communication overhead
-    const justshipOverheadMult = 1.15;  // lean review + architecture
-
-    // Calculate hours
-    const teamHours = Math.round(baseHours * teamOverheadMult);
-    const freelancerHours = Math.round(baseHours * freelancerOverheadMult);
-    const justshipHours = Math.round(baseHours * justshipOverheadMult);
-
-    // Costs
-    const teamDevCost = Math.round(baseHours * teamRate);
-    const teamRecruitCost = Math.round(baseHours * 0.2 * teamRate);
-    const teamMgmtCost = Math.round(baseHours * 0.25 * teamRate);
-    const teamTotal = teamDevCost + teamRecruitCost + teamMgmtCost;
-
-    const freelancerDevCost = Math.round(baseHours * freelancerRate);
-    const freelancerPmCost = Math.round(baseHours * 0.15 * freelancerRate);
-    const freelancerQaCost = Math.round(baseHours * 0.1 * freelancerRate);
-    const freelancerTotal = freelancerDevCost + freelancerPmCost + freelancerQaCost;
-
-    const justshipDevCost = Math.round(baseHours * justshipRate);
-    const justshipArchCost = Math.round(baseHours * 0.1 * justshipRate);
-    const justshipTestCost = Math.round(baseHours * 0.05 * justshipRate);
-    const justshipTotal = justshipDevCost + justshipArchCost + justshipTestCost;
-
-    // Duration estimates (working days, 8h/day)
-    const teamWeeks = Math.round(teamHours / 40);
-    const freelancerWeeks = Math.round(freelancerHours / 40);
-    const justshipWeeks = Math.max(1, Math.round((justshipHours / 40) * 0.4)); // AI is much faster
-
-    // Savings
-    const avgTraditional = Math.round((teamTotal + freelancerTotal) / 2);
-    const savingsPercent = Math.round((1 - justshipTotal / avgTraditional) * 100);
-
-    return {
-      team: { total: teamTotal, dev: teamDevCost, overhead: teamRecruitCost, mgmt: teamMgmtCost, weeks: teamWeeks },
-      freelancer: { total: freelancerTotal, dev: freelancerDevCost, overhead: freelancerPmCost, mgmt: freelancerQaCost, weeks: freelancerWeeks },
-      justship: { total: justshipTotal, dev: justshipDevCost, overhead: justshipArchCost, mgmt: justshipTestCost, weeks: justshipWeeks },
-      savingsPercent: savingsPercent,
-      baseHours: baseHours
-    };
+        displayResults(resp.json.data);
+        showStep(5);
+      } catch (e) {
+        document.getElementById('calc-error-msg').textContent = 'Netzwerkfehler. Bitte versuche es erneut.';
+        showStep('error');
+      }
+    });
   }
 
   function formatEur(n) {
-    return n.toLocaleString('de-DE') + ' €';
+    return n.toLocaleString('de-DE') + ' \u20AC';
   }
 
-  function displayResults(r) {
-    document.getElementById('calc-results-summary').textContent =
-      'Geschaetzter Umfang: ~' + r.baseHours + ' Stunden Entwicklungsaufwand';
-
-    // Team
-    document.getElementById('calc-price-team').textContent = formatEur(r.team.total);
-    document.getElementById('calc-duration-team').textContent = r.team.weeks + '+ Wochen';
-    document.getElementById('calc-dev-team').textContent = formatEur(r.team.dev);
-    document.getElementById('calc-overhead-team').textContent = formatEur(r.team.overhead);
-    document.getElementById('calc-mgmt-team').textContent = formatEur(r.team.mgmt);
-
-    // Freelancer
-    document.getElementById('calc-price-freelancer').textContent = formatEur(r.freelancer.total);
-    document.getElementById('calc-duration-freelancer').textContent = r.freelancer.weeks + '+ Wochen';
-    document.getElementById('calc-dev-freelancer').textContent = formatEur(r.freelancer.dev);
-    document.getElementById('calc-overhead-freelancer').textContent = formatEur(r.freelancer.overhead);
-    document.getElementById('calc-mgmt-freelancer').textContent = formatEur(r.freelancer.mgmt);
-
-    // JustShip
-    document.getElementById('calc-price-justship').textContent = formatEur(r.justship.total);
-    document.getElementById('calc-duration-justship').textContent = r.justship.weeks + '–' + (r.justship.weeks + Math.max(1, Math.round(r.justship.weeks * 0.5))) + ' Wochen';
-    document.getElementById('calc-dev-justship').textContent = formatEur(r.justship.dev);
-    document.getElementById('calc-overhead-justship').textContent = formatEur(r.justship.overhead);
-    document.getElementById('calc-mgmt-justship').textContent = formatEur(r.justship.mgmt);
-
-    // Savings
-    document.getElementById('calc-savings').textContent = '~' + r.savingsPercent + '% guenstiger als Durchschnitt';
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
   }
+
+  function displayResults(data) {
+    // Scope
+    document.getElementById('calc-scope-title').textContent = data.scope.title || 'Deine Kostenschaetzung';
+    document.getElementById('calc-scope-summary').textContent = data.scope.summary || '';
+
+    // Features tags
+    var featuresEl = document.getElementById('calc-scope-features');
+    featuresEl.innerHTML = '';
+    (data.scope.features || []).forEach(function(f) {
+      var tag = document.createElement('span');
+      tag.className = 'about-tag';
+      tag.textContent = f;
+      featuresEl.appendChild(tag);
+    });
+
+    // Build comparison cards
+    var grid = document.getElementById('calc-results-grid');
+    grid.innerHTML = '';
+
+    var entries = [
+      { key: 'team', label: 'Eigenes Team', highlight: false },
+      { key: 'freelancer', label: 'Agentur / Freelancer', highlight: false },
+      { key: 'ai_team', label: 'Mit AI-Agent-Team', highlight: true }
+    ];
+
+    entries.forEach(function(entry) {
+      var c = data.comparison[entry.key];
+      if (!c) return;
+
+      var card = document.createElement('div');
+      card.className = 'calc-result-card' + (entry.highlight ? ' highlight' : '');
+
+      var breakdownHtml = '';
+      if (c.breakdown) {
+        var rows = '';
+        Object.keys(c.breakdown).forEach(function(k) {
+          rows += '<div class="calc-result-row"><span>' + escapeHtml(k) + '</span><span class="row-val">' + formatEur(c.breakdown[k]) + '</span></div>';
+        });
+        breakdownHtml = '<div class="calc-result-breakdown" style="display:flex;flex-direction:column;gap:0.4rem;padding-top:0.75rem;border-top:1px solid var(--border);margin-top:auto;">' + rows + '</div>';
+      }
+
+      var savingsHtml = entry.highlight
+        ? '<div class="calc-result-savings">In Wochen statt Monaten. Mit Uebergabe statt Abhaengigkeit.</div>'
+        : '';
+
+      var ctaHtml = entry.highlight
+        ? '<div class="calc-result-cta"><a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Projekt besprechen</a></div>'
+        : '<div class="calc-result-cta"><a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer">Vergleich besprechen</a></div>';
+
+      card.innerHTML =
+        '<div class="calc-result-label">' + escapeHtml(entry.label) + '</div>' +
+        '<div class="calc-result-price">' + formatEur(c.price) + '</div>' +
+        '<div class="calc-result-duration">' + escapeHtml(c.timeline) + '</div>' +
+        (c.description ? '<div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;margin-bottom:0.5rem;">' + escapeHtml(c.description) + '</div>' : '') +
+        (c.result ? '<div class="calc-result-outcome' + (entry.highlight ? ' highlight-outcome' : '') + '">' + escapeHtml(c.result) + '</div>' : '') +
+        breakdownHtml +
+        savingsHtml +
+        ctaHtml;
+
+      grid.appendChild(card);
+    });
+
+    // Intake link
+    var intakeLink = document.getElementById('calc-intake-link');
+    if (data.intake_token) {
+      intakeLink.href = INTAKE_URL + '/' + data.intake_token;
+      intakeLink.style.display = '';
+    } else {
+      intakeLink.style.display = 'none';
+    }
+  }
+
+  // Error retry
+  errorRetryBtn.addEventListener('click', function() {
+    nextBtn2.textContent = 'Ergebnis anzeigen';
+    nextBtn2.disabled = false;
+    showStep(1);
+  });
 
   // Restart
-  restartBtn.addEventListener('click', () => {
+  restartBtn.addEventListener('click', function() {
     textarea.value = '';
     charCount.textContent = '0';
     nextBtn1.disabled = true;
+    nameInput.value = '';
     emailInput.value = '';
-    nextBtn2.textContent = 'Berechnen';
+    nextBtn2.textContent = 'Ergebnis anzeigen';
     nextBtn2.disabled = false;
     showStep(1);
     textarea.focus();
