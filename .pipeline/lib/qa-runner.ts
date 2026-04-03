@@ -146,6 +146,7 @@ export function runTestCheck(workDir: string, packageManager: string, overrideCm
   try {
     pkgJson = JSON.parse(readFileSync(pkgJsonPath, "utf-8"));
   } catch {
+    // Malformed package.json — skip test check gracefully
     return null;
   }
 
@@ -287,7 +288,7 @@ console.log('QA_RESULT:' + JSON.stringify(result));
     try {
       unlinkSync(scriptPath);
     } catch {
-      // ignore cleanup errors
+      // Best-effort: temp file cleanup failure is non-critical
     }
   }
 }
@@ -484,7 +485,7 @@ export function postQaReport(
     try {
       unlinkSync(tmpFile);
     } catch {
-      // ignore cleanup errors
+      // Best-effort: temp file cleanup failure is non-critical
     }
   }
 
@@ -532,6 +533,36 @@ export async function runQa(ctx: QaContext): Promise<QaReport> {
     return report;
   }
 
+  // --- Shopify theme check (official Liquid linter, light + full) ---
+  if (ctx.qaConfig.shopifyEnabled) {
+    try {
+      const themeCheckOutput = execSync("shopify theme check --fail-level error", {
+        cwd: ctx.workDir,
+        encoding: "utf-8",
+        timeout: 60_000,
+      });
+      report.checks.push({
+        name: "shopify-theme-check",
+        passed: true,
+        details: "No errors found",
+        blocking: false,
+      });
+    } catch (e) {
+      const err = e as { stdout?: string; stderr?: string; status?: number };
+      const output = (err.stdout || "") + (err.stderr || "");
+      const errorCount = (output.match(/error/gi) || []).length;
+      report.checks.push({
+        name: "shopify-theme-check",
+        passed: errorCount === 0,
+        details: errorCount > 0
+          ? `${errorCount} error(s) found by shopify theme check`
+          : "Warnings found (non-blocking)",
+        blocking: errorCount > 0,
+      });
+      if (errorCount > 0) report.status = "failed";
+    }
+  }
+
   // --- Shopify static analysis (light + full, Shopify projects only) ---
   if (ctx.qaConfig.shopifyEnabled) {
     const qaScriptPath = join(ctx.workDir, ".claude/scripts/shopify-qa.sh");
@@ -567,6 +598,7 @@ export async function runQa(ctx: QaContext): Promise<QaReport> {
             });
             report.status = "failed";
           } catch {
+            // Shopify QA script produced non-JSON output — treat as non-blocking pass
             report.checks.push({ name: "shopify-qa", passed: true, details: "Script output not parseable", blocking: false });
           }
         } else {

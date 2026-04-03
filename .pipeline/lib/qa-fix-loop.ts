@@ -6,21 +6,10 @@
  */
 
 import { query } from "@anthropic-ai/claude-agent-sdk";
-import { execSync, spawn } from "node:child_process";
+import { execSync } from "node:child_process";
 import { runQa, postQaReport, type QaContext, type QaReport } from "./qa-runner.js";
-
-function makeSpawn(logPrefix: string) {
-  return (spawnOptions: { command: string; args: string[]; cwd?: string; env?: NodeJS.ProcessEnv; signal?: AbortSignal }) => {
-    const { command, args, cwd, env, signal } = spawnOptions;
-    const child = spawn(command, args, { cwd, env, stdio: ["pipe", "pipe", "pipe"], signal } as Parameters<typeof spawn>[2]);
-    child.stderr?.on("data", (chunk: Buffer) => {
-      for (const line of chunk.toString().split("\n")) {
-        if (line.trim()) console.error(`${logPrefix} [stderr] ${line}`);
-      }
-    });
-    return child;
-  };
-}
+import { makeSpawn } from "./spawn.ts";
+import { sleep } from "./utils.ts";
 
 // ---------------------------------------------------------------------------
 // Interfaces
@@ -43,13 +32,12 @@ function getLastCommitMessage(workDir: string): string {
       stdio: ["pipe", "pipe", "pipe"],
     }).trim();
   } catch {
+    // Best-effort: commit message is for logging only — fix loop continues regardless
     return "(could not read last commit)";
   }
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// sleep() imported from ./utils.ts
 
 // ---------------------------------------------------------------------------
 // Fix Prompt Builder

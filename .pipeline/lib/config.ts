@@ -73,6 +73,7 @@ function loadGlobalConfig(): GlobalConfig | null {
   try {
     return JSON.parse(readFileSync(configPath, "utf-8"));
   } catch {
+    console.warn("[Config] Could not parse ~/.just-ship/config.json — continuing without global config");
     return null;
   }
 }
@@ -258,8 +259,7 @@ export function loadProjectConfig(projectDir: string): ProjectConfig {
 export function parseCliArgs(args: string[]): TicketArgs {
   const [ticketId, title, description, labels] = args;
   if (!ticketId || !title) {
-    console.error("Usage: run.ts <TICKET_ID> <TITLE> [DESCRIPTION] [LABELS]");
-    process.exit(1);
+    throw new Error("Usage: run.ts <TICKET_ID> <TITLE> [DESCRIPTION] [LABELS]");
   }
   return {
     ticketId,

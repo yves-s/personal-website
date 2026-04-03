@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 import { existsSync, readdirSync, rmSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { sanitizeBranchName } from "./sanitize.ts";
 
 interface Slot {
   slotId: number;
@@ -132,6 +133,7 @@ export class WorktreeManager {
         .filter((d) => d.isDirectory())
         .map((d) => d.name);
     } catch {
+      console.warn("[WorktreeManager] Could not read worktree base directory during prune");
       return;
     }
 
@@ -145,7 +147,7 @@ export class WorktreeManager {
           const paused = await isTicketPaused(branchName);
           if (paused) continue; // Skip -- ticket is paused, keep worktree
         } catch {
-          // If the check fails, be conservative and keep it
+          // Pause check failed (e.g. Supabase timeout) — conservatively keep the worktree
           continue;
         }
       }
@@ -218,6 +220,9 @@ export class WorktreeManager {
   }
 
   private _createWorktree(branchName: string): { slotId: number; workDir: string } {
+    // Validate branch name before any shell interpolation
+    sanitizeBranchName(branchName);
+
     const slotId = this._nextId();
     const workDir = join(this.worktreeBase, `worker-${slotId}`);
 
@@ -228,7 +233,7 @@ export class WorktreeManager {
 
     // Delete stale local branch if it exists (e.g. from a previous failed run)
     try {
-      this._git(`rev-parse --verify refs/heads/${branchName}`);
+      this._git(`rev-parse --verify "refs/heads/${branchName}"`);
       // Branch exists -- delete it so we can recreate from origin/main
       this._git(`branch -D "${branchName}"`);
     } catch {
@@ -276,6 +281,7 @@ export class WorktreeManager {
         .filter((d) => d.isDirectory())
         .map((d) => d.name);
     } catch {
+      console.warn("[WorktreeManager] Could not read worktree base directory during parked scan");
       return null;
     }
 

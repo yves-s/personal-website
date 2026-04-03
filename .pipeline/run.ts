@@ -1,6 +1,6 @@
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import type { SDKMessage } from "@anthropic-ai/claude-agent-sdk";
-import { execSync, spawn } from "node:child_process";
+import { execSync } from "node:child_process";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { loadProjectConfig, parseCliArgs, type TicketArgs } from "./lib/config.ts";
@@ -12,20 +12,9 @@ import { generateChangeSummary } from "./lib/change-summary.ts";
 import { loadSkills, type AgentRole } from "./lib/load-skills.ts";
 import { Sentry } from "./lib/sentry.ts";
 import { updateCheckpoint, clearCheckpoint, type PipelineCheckpoint } from "./lib/checkpoint.ts";
-
-// --- Stderr-capturing spawn wrapper for Claude Code subprocesses ---
-function makeSpawn(logPrefix: string) {
-  return (spawnOptions: { command: string; args: string[]; cwd?: string; env?: NodeJS.ProcessEnv; signal?: AbortSignal }) => {
-    const { command, args, cwd, env, signal } = spawnOptions;
-    const child = spawn(command, args, { cwd, env, stdio: ["pipe", "pipe", "pipe"], signal } as Parameters<typeof spawn>[2]);
-    child.stderr?.on("data", (chunk: Buffer) => {
-      for (const line of chunk.toString().split("\n")) {
-        if (line.trim()) console.error(`${logPrefix} [stderr] ${line}`);
-      }
-    });
-    return child;
-  };
-}
+import { sanitizeBranchName } from "./lib/sanitize.ts";
+import { toBranchName } from "./lib/utils.ts";
+import { makeSpawn } from "./lib/spawn.ts";
 
 // --- Exported pipeline function (used by worker.ts) ---
 export interface PipelineOptions {
@@ -180,13 +169,12 @@ export async function executePipeline(opts: PipelineOptions): Promise<PipelineRe
   if (opts.branchName) {
     branchName = opts.branchName;
   } else {
-    const branchSlug = ticket.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "-")
-      .replace(/-+/g, "-")
-      .slice(0, 40);
-    branchName = `${config.conventions.branch_prefix}${ticket.ticketId}-${branchSlug}`;
+    branchName = toBranchName(config.conventions.branch_prefix, ticket.ticketId, ticket.title);
   }
+
+  // Validate branch name before any shell interpolation (toBranchName already validates,
+  // but branchName may come from opts.branchName which is external input)
+  sanitizeBranchName(branchName);
 
   // workDir: use provided worktree directory, or fall back to projectDir (CLI mode)
   const workDir = opts.workDir ?? projectDir;
@@ -197,12 +185,13 @@ export async function executePipeline(opts: PipelineOptions): Promise<PipelineRe
     try {
       execSync("git checkout -f main", { cwd: projectDir, stdio: "pipe" });
       execSync("git pull origin main", { cwd: projectDir, stdio: "pipe" });
-    } catch { /* continue */ }
+    } catch { /* Best-effort: git checkout/pull may fail on dirty state — continue with branch creation */ }
 
     try {
-      execSync(`git checkout -b ${branchName}`, { cwd: projectDir, stdio: "pipe" });
+      execSync(`git checkout -b "${branchName}"`, { cwd: projectDir, stdio: "pipe" });
     } catch {
-      execSync(`git checkout ${branchName}`, { cwd: projectDir, stdio: "pipe" });
+      // Branch already exists — switch to it instead
+      execSync(`git checkout "${branchName}"`, { cwd: projectDir, stdio: "pipe" });
     }
   }
 
@@ -212,6 +201,7 @@ export async function executePipeline(opts: PipelineOptions): Promise<PipelineRe
     mkdirSync(claudeDir, { recursive: true });
     writeFileSync(join(claudeDir, ".active-ticket"), ticket.ticketId);
   } catch {
+    // Best-effort: .active-ticket enables event hooks but is not required for pipeline execution
     console.error(`[Pipeline] Warning: could not write .active-ticket`);
   }
 
@@ -347,10 +337,14 @@ export async function executePipeline(opts: PipelineOptions): Promise<PipelineRe
           const commentBody = formatEnrichmentComment(triageResult);
           try {
             execSync(
-              `bash "${workDir}/.claude/scripts/post-comment.sh" "${ticket.ticketId}" "${commentBody.replace(/"/g, '\\"')}" "triage"`,
-              { timeout: 5_000, stdio: "ignore" }
+              `bash "${workDir}/.claude/scripts/post-comment.sh" "${ticket.ticketId}" "" "triage"`,
+              {
+                timeout: 5_000,
+                stdio: "ignore",
+                env: { ...process.env, COMMENT_BODY: commentBody },
+              }
             );
-          } catch { /* non-blocking */ }
+          } catch { /* Best-effort: enrichment comment posting is non-critical */ }
         }
       }
     } catch (e) {
@@ -537,6 +531,7 @@ Branch ist bereits erstellt: ${branchName}`;
             signal: AbortSignal.timeout(8000),
           });
         } catch {
+          // Best-effort: question storage enables human-in-the-loop UI but pipeline can pause without it
           console.error("[Pipeline] Warning: could not store question in ticket");
         }
       }
@@ -703,13 +698,12 @@ export async function resumePipeline(opts: ResumeOptions): Promise<PipelineResul
   if (opts.branchName) {
     branchName = opts.branchName;
   } else {
-    const branchSlug = ticket.title
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "-")
-      .replace(/-+/g, "-")
-      .slice(0, 40);
-    branchName = `${config.conventions.branch_prefix}${ticket.ticketId}-${branchSlug}`;
+    branchName = toBranchName(config.conventions.branch_prefix, ticket.ticketId, ticket.title);
   }
+
+  // Validate branch name before any shell interpolation (toBranchName already validates,
+  // but branchName may come from opts.branchName which is external input)
+  sanitizeBranchName(branchName);
 
   // workDir: use provided worktree directory, or fall back to projectDir (CLI mode)
   const workDir = opts.workDir ?? projectDir;
@@ -717,8 +711,8 @@ export async function resumePipeline(opts: ResumeOptions): Promise<PipelineResul
   if (!opts.workDir) {
     // CLI mode — no worktree manager, do git checkout as before
     try {
-      execSync(`git checkout ${branchName}`, { cwd: projectDir, stdio: "pipe" });
-    } catch { /* branch may already be checked out */ }
+      execSync(`git checkout "${branchName}"`, { cwd: projectDir, stdio: "pipe" });
+    } catch { /* Best-effort: branch may already be checked out in CLI resume mode */ }
   }
 
   // --- Write .active-ticket so Claude Code hooks can send events ---
@@ -727,6 +721,7 @@ export async function resumePipeline(opts: ResumeOptions): Promise<PipelineResul
     mkdirSync(claudeDir, { recursive: true });
     writeFileSync(join(claudeDir, ".active-ticket"), ticket.ticketId);
   } catch {
+    // Best-effort: .active-ticket enables event hooks but is not required for pipeline execution
     console.error(`[Pipeline] Warning: could not write .active-ticket`);
   }
 
@@ -873,6 +868,7 @@ export async function resumePipeline(opts: ResumeOptions): Promise<PipelineResul
             signal: AbortSignal.timeout(8000),
           });
         } catch {
+          // Best-effort: question storage enables human-in-the-loop UI but pipeline can pause without it
           console.error("[Pipeline] Warning: could not store question in ticket");
         }
       }
@@ -947,7 +943,13 @@ const isMain = process.argv[1]?.endsWith("run.ts");
 if (isMain) {
   (async () => {
     const projectDir = process.cwd();
-    const ticket = parseCliArgs(process.argv.slice(2));
+    let ticket: TicketArgs;
+    try {
+      ticket = parseCliArgs(process.argv.slice(2));
+    } catch (e) {
+      console.error(e instanceof Error ? e.message : String(e));
+      process.exit(1);
+    }
     const config = loadProjectConfig(projectDir);
 
     // --- Banner ---
