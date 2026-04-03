@@ -2227,28 +2227,45 @@ async function submitNewsletter() {
       })
     }).then(function(res) { return res.json().then(function(json) { return { status: res.status, json: json }; }); });
 
-    // Animate remaining steps, then wait for API
-    animateSteps(calcContainer, async function() {
-      try {
-        var resp = await apiPromise;
+    // Animate steps 3 (done) then keep step 4 spinning until API responds
+    var calcSteps = calcContainer.querySelectorAll('.calc-loading-step[data-step]');
+    calcSteps.forEach(function(s) { s.classList.remove('active', 'done'); s.querySelector('.step-icon').innerHTML = ''; });
 
-        if (resp.json.error) {
-          var msg = resp.json.error.message || 'Fehler bei der Kalkulation';
-          if (resp.status === 429) {
-            msg = 'Du hast heute schon mehrere Schätzungen angefragt. Probiere es morgen nochmal!';
-          }
-          document.getElementById('calc-error-msg').textContent = msg;
-          showStep('error');
-          return;
+    // Step 3: activate, then done after delay
+    calcSteps[0].classList.add('active');
+    setTimeout(function() {
+      calcSteps[0].classList.remove('active');
+      calcSteps[0].classList.add('done');
+      calcSteps[0].querySelector('.step-icon').innerHTML = '&#10003;';
+      // Step 4: stays spinning until API finishes
+      calcSteps[1].classList.add('active');
+    }, 800 + Math.random() * 400);
+
+    // Wait for API, then finish
+    try {
+      var resp = await apiPromise;
+
+      // Mark last step done
+      calcSteps[1].classList.remove('active');
+      calcSteps[1].classList.add('done');
+      calcSteps[1].querySelector('.step-icon').innerHTML = '&#10003;';
+
+      if (resp.json.error) {
+        var msg = resp.json.error.message || 'Fehler bei der Analyse';
+        if (resp.status === 429) {
+          msg = 'Du hast heute schon mehrere Analysen angefragt. Probiere es morgen nochmal!';
         }
-
-        displayResults(resp.json.data);
-        showStep(5);
-      } catch (e) {
-        document.getElementById('calc-error-msg').textContent = 'Netzwerkfehler. Bitte versuche es erneut.';
-        showStep('error');
+        document.getElementById('calc-error-msg').textContent = msg;
+        setTimeout(function() { showStep('error'); }, 300);
+        return;
       }
-    });
+
+      displayResults(resp.json.data);
+      setTimeout(function() { showStep(5); }, 300);
+    } catch (e) {
+      document.getElementById('calc-error-msg').textContent = 'Netzwerkfehler. Bitte versuche es erneut.';
+      showStep('error');
+    }
   }
 
   function escapeHtml(str) {
