@@ -1,0 +1,23 @@
+{
+  "name": "personal-web",
+  "description": "Persoenliche Website von Yves Schleich — statische Landing Page, gehostet auf Vercel",
+  "stack": {
+    "framework": "Static HTML",
+    "language": "HTML / CSS / JavaScript",
+    "styling": "Inline CSS (Google Fonts: DM Sans, JetBrains Mono)",
+    "database": null,
+    "orm": null,
+    "testing": null,
+    "package_manager": null
+  },
+  "build": {
+    "web": null,
+    "dev": null,
+    "test": null
+  },
+  "paths": {},
+  "pipeline": {
+    "workspace_id": "421dffa5-5f2e-44a8-bdc1-7e0f31a87149",
+    "project_id": "0759f8b7-d8d6-4c0d-96fc-4e0a84af147e"
+  }
+}
