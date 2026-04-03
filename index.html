@@ -1678,7 +1678,7 @@
 <div class="hero">
   <div class="hero-label">Software ohne Dev-Team</div>
   <h1>Die Engineering-Abteilung, die du nicht einstellen musst.</h1>
-  <p class="hero-sub">Du brauchst Software, aber kein Dev-Team? Ich liefere mit meinem AI-Agent-Team fertige Systeme – in Tagen, nicht Monaten. Fuer das, wofuer andere 200–450k im Jahr ausgeben.</p>
+  <p class="hero-sub">Du brauchst Software, aber kein Dev-Team? Ich liefere mit meinem AI-Agent-Team fertige Systeme – in Tagen, nicht Monaten.</p>
   <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer" class="hero-btn">Projekt besprechen →</a>
   <p class="hero-note">Kein Agentur-Vertrag. Kein Hiring. Erste Ergebnisse in Tagen.</p>
 </div>
@@ -1687,17 +1687,17 @@
 <div class="calc-section" id="rechner">
   <div class="section-label">Kostenrechner</div>
   <h2>Was kostet dein Projekt?</h2>
-  <p class="section-intro">Beschreib deine Idee und erhalte eine realistische Kostenschaetzung – Team vs. Freelancer vs. AI-Agent-Team.</p>
+  <p class="section-intro">Beschreib deine Idee und erhalte eine realistische Kostenschätzung – Team vs. Freelancer vs. AI-Agent-Team.</p>
 
   <div class="calc-container">
     <!-- Step 1: Project Input -->
     <div class="calc-step active" id="calc-step-1">
       <div class="calc-prompt-box">
         <label for="calc-idea" class="sr-only">Projektbeschreibung</label>
-        <textarea id="calc-idea" class="calc-textarea" placeholder="z.B. Ich brauche einen Online-Shop mit Kundenkonto, Warenkorb und Anbindung an mein Warenwirtschaftssystem. Dazu ein Dashboard fuer mein Team mit Bestelluebersicht und Lagerbestand..." maxlength="2000"></textarea>
+        <textarea id="calc-idea" class="calc-textarea" placeholder="z.B. Ich brauche einen Online-Shop mit Kundenkonto, Warenkorb und Anbindung an mein Warenwirtschaftssystem. Dazu ein Dashboard für mein Team mit Bestellübersicht und Lagerbestand..." maxlength="2000"></textarea>
         <div class="calc-char-count"><span id="calc-chars">0</span> / 2.000</div>
         <div class="calc-prompt-actions">
-          <span class="calc-prompt-hint">Je detaillierter, desto genauer die Schaetzung.</span>
+          <span class="calc-prompt-hint">Je detaillierter, desto genauer die Schätzung.</span>
           <button class="calc-btn" id="calc-next-1" disabled>Kosten berechnen</button>
         </div>
       </div>
@@ -1714,7 +1714,7 @@
           </div>
           <div class="calc-loading-step" data-step="1">
             <span class="step-icon"></span>
-            <span>Technische Komplexitaet bewerten</span>
+            <span>Technische Komplexität bewerten</span>
           </div>
           <div class="calc-loading-step calc-pending-api" data-step="2">
             <span class="step-icon"></span>
@@ -1758,7 +1758,7 @@
           </div>
           <div class="calc-loading-step done">
             <span class="step-icon">&#10003;</span>
-            <span>Technische Komplexitaet bewerten</span>
+            <span>Technische Komplexität bewerten</span>
           </div>
           <div class="calc-loading-step" data-step="0">
             <span class="step-icon"></span>
@@ -1783,7 +1783,7 @@
           </div>
           <div class="calc-loading-step" data-step="1">
             <span class="step-icon"></span>
-            <span>Technische Komplexitaet bewerten</span>
+            <span>Technische Komplexität bewerten</span>
           </div>
           <div class="calc-loading-step" data-step="2">
             <span class="step-icon"></span>
@@ -1800,7 +1800,7 @@
     <!-- Step 5: Results -->
     <div class="calc-step" id="calc-step-5">
       <div class="calc-results-header">
-        <h3 id="calc-scope-title">Deine Kostenschaetzung</h3>
+        <h3 id="calc-scope-title">Deine Kostenschätzung</h3>
         <p id="calc-scope-summary"></p>
       </div>
 
@@ -1814,7 +1814,7 @@
           <a href="https://calendly.com/yves-schleich/30min" target="_blank" rel="noopener noreferrer" class="calc-btn">Projekt besprechen</a>
           <a href="#" id="calc-intake-link" class="calc-btn" style="background:transparent;border:1px solid var(--border-light);color:var(--text-secondary);">Details verfeinern</a>
         </div>
-        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;">Alle Angaben sind Schaetzwerte basierend auf AI-Analyse und Marktdaten.</p>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;">Alle Angaben sind Schätzwerte basierend auf AI-Analyse und Marktdaten.</p>
         <button class="calc-restart-btn" id="calc-restart">Neue Berechnung starten</button>
       </div>
     </div>
@@ -2315,7 +2315,7 @@ async function submitNewsletter() {
         if (resp.json.error) {
           var msg = resp.json.error.message || 'Fehler bei der Kalkulation';
           if (resp.status === 429) {
-            msg = 'Du hast heute schon mehrere Schaetzungen angefragt. Probiere es morgen nochmal!';
+            msg = 'Du hast heute schon mehrere Schätzungen angefragt. Probiere es morgen nochmal!';
           }
           document.getElementById('calc-error-msg').textContent = msg;
           showStep('error');
@@ -2343,7 +2343,7 @@ async function submitNewsletter() {
 
   function displayResults(data) {
     // Scope
-    document.getElementById('calc-scope-title').textContent = data.scope.title || 'Deine Kostenschaetzung';
+    document.getElementById('calc-scope-title').textContent = data.scope.title || 'Deine Kostenschätzung';
     document.getElementById('calc-scope-summary').textContent = data.scope.summary || '';
 
     // Features tags
@@ -2383,7 +2383,7 @@ async function submitNewsletter() {
       }
 
       var savingsHtml = entry.highlight
-        ? '<div class="calc-result-savings">In Wochen statt Monaten. Mit Uebergabe statt Abhaengigkeit.</div>'
+        ? '<div class="calc-result-savings">In Wochen statt Monaten. Mit Übergabe statt Abhängigkeit.</div>'
         : '';
 
       var ctaHtml = entry.highlight
