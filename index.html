@@ -166,15 +166,16 @@
 
   /* ── NAV (Glass UI) ── */
   .nav-wrapper {
+    display: none;
+  }
+
+  nav {
     position: fixed;
     top: 1.25rem;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
-  }
-
-  nav {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0;
     padding: 0.5rem 0.5rem 0.5rem 1.25rem;
@@ -184,7 +185,6 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 100px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    width: max-content;
   }
 
   .nav-left {
@@ -1683,8 +1683,7 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 640px) {
-    .nav-wrapper { padding: 0.75rem 1rem; }
-    nav { padding: 0.4rem 0.4rem 0.4rem 1rem; }
+    nav { top: 0.75rem; padding: 0.4rem 0.4rem 0.4rem 1rem; }
     .nav-sep, .nav-justship { display: none; }
     .nav-left { border-right: none; padding-right: 0; margin-right: 0; }
     .nav-links { display: none; }
