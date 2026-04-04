@@ -167,18 +167,13 @@
   /* ── NAV (Glass UI) ── */
   .nav-wrapper {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 100;
-    display: flex;
-    justify-content: center;
-    padding: 1.25rem 1.5rem;
-    pointer-events: none;
   }
 
   nav {
-    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 0;
@@ -189,7 +184,7 @@
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 100px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    width: fit-content;
+    width: max-content;
   }
 
   .nav-left {
