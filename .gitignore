@@ -1,2 +1,5 @@
 node_modules/
 .DS_Store
+
+# Pipeline dependencies (auto-installed)
+.pipeline/node_modules
