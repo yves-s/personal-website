@@ -19,5 +19,10 @@
   "pipeline": {
     "workspace_id": "421dffa5-5f2e-44a8-bdc1-7e0f31a87149",
     "project_id": "0759f8b7-d8d6-4c0d-96fc-4e0a84af147e"
+  },
+  "hosting": {
+    "provider": "coolify",
+    "coolify_url": "https://coolify.just-ship.io",
+    "coolify_app_uuid": "tg33143peuxl5gqujitmhnnn"
   }
 }
